@@ -1,19 +1,21 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
 public class User
 {
     public string? userName { get; set; }
-    public required int? userId { get; set; }
+
+    [Required]
+    public required int userId { get; set; }
+
     public string? userDetails { get; set; }
 }
-
-
 
 [ApiController]
 [Route("api/[controller]")]
 public class TechHiveController : ControllerBase
 {
-    List<User> users = new List<User>
+    static List<User> users = new List<User>
     {
         new User {userName = "Minseok Kim", userId = 1, userDetails = "This is Minseok"},
         new User {userName = "Yuta Bordes", userId = 2, userDetails = "This is Yuta"},
@@ -21,6 +23,7 @@ public class TechHiveController : ControllerBase
     };
 
     [HttpGet]
+    [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult GetUserList()
     {
@@ -29,9 +32,23 @@ public class TechHiveController : ControllerBase
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult GetUser(int id)
     {
-        return Ok(users.Single(user => user.userId == id));
+        try
+        {
+            var userWithId = users.SingleOrDefault(user => user.userId == id);
+            if (userWithId == null)
+            {
+                return NotFound($"User with id {id} does not exist.");
+            }
+            return Ok(userWithId);
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
     }
 
     [HttpPost]
@@ -39,12 +56,18 @@ public class TechHiveController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult AddUser(User user)
     {
-        if (user.userId is not null && user.userName is not null)
+        try
         {
+            var currentUser = users.SingleOrDefault(currentUser => currentUser.userId == user.userId);
+            if (currentUser != null) // user already has the same userid then update the user id
+            {
+                int maxId = users.Max(u => u.userId);
+                user.userId = maxId + 1;
+            }
             users.Add(user);
             return Ok(users);
         }
-        else
+        catch (Exception)
         {
             return BadRequest();
         }
@@ -55,11 +78,12 @@ public class TechHiveController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult UpdateUser(int id, User userToUpdate)
     {
-        if (userToUpdate == null || userToUpdate.userId == null) return BadRequest();
+        if (userToUpdate == null) return BadRequest();
 
-        var currentUserToUpdate = users.Single(user => user.userId == id);
+        var currentUserToUpdate = users.SingleOrDefault(user => user.userId == id);
         if (currentUserToUpdate == null) return BadRequest();
         currentUserToUpdate.userDetails = userToUpdate.userDetails;
+
         return Ok(currentUserToUpdate);
     }
 
