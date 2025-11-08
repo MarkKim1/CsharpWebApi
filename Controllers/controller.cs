@@ -50,8 +50,29 @@ public class TechHiveController : ControllerBase
         }
     }
 
-    [HttpPut]
-    public IActionResult
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult UpdateUser(int id, User userToUpdate)
+    {
+        if (userToUpdate == null || userToUpdate.userId == null) return BadRequest();
+
+        var currentUserToUpdate = users.Single(user => user.userId == id);
+        if (currentUserToUpdate == null) return BadRequest();
+        currentUserToUpdate.userDetails = userToUpdate.userDetails;
+        return Ok(currentUserToUpdate);
+    }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult DeleteUser(int id)
+    {
+        var userToDelete = users.Single(user => user.userId == id);
+        if (userToDelete == null) return BadRequest();
+        users.Remove(userToDelete);
+        return Ok(users);
+    }
 
 }
 

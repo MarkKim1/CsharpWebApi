@@ -30,3 +30,7 @@
 /Users/minseok/Desktop/developments/C#/UserManagementAPI/obj/Debug/net9.0/UserManagementAPI.pdb
 /Users/minseok/Desktop/developments/C#/UserManagementAPI/obj/Debug/net9.0/UserManagementAPI.genruntimeconfig.cache
 /Users/minseok/Desktop/developments/C#/UserManagementAPI/obj/Debug/net9.0/ref/UserManagementAPI.dll
+/Users/minseok/Desktop/developments/C#/UserManagementAPI/bin/Debug/net9.0/Swashbuckle.AspNetCore.Swagger.dll
+/Users/minseok/Desktop/developments/C#/UserManagementAPI/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/Users/minseok/Desktop/developments/C#/UserManagementAPI/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+/Users/minseok/Desktop/developments/C#/UserManagementAPI/obj/Debug/net9.0/UserManagementAPI.sourcelink.json
